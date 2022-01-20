@@ -1,11 +1,17 @@
 ---
 apache_packages:
   - apache2
-  - mod_ssl
+  - libapache2-mod-php
+  # - libapache2-mod-perl2
+  # - libapache2-mod-fcgid
+  # - libapache2-mod-python
+  # - libapache2-mod-log-slow
+  # - libapache2-mod-geoip
+  # - dehydrated-apache2
 
 apache_modules:
   - name: ssl
-    state: enabled
+    disabled: true
 
 apache_vhosts:
   - name: 00-default
@@ -114,99 +120,15 @@ apache_secrity_cfg:
     "X-Content-Type-Options": nosniff
     "X-XSS-Protection": '"1; mode=block"'
 
-apache_cfg:
-  server_admin: root@localhost
-  enable_mmap: true
-  enable_sendfile: true
-  # extra_setting: |
-  #   ExtendedStatus On
+apache_extra_cfg: |
+  ## Security
+  <DirectoryMatch "/\.git">
+      Require all denied
+  </DirectoryMatch>
+  Header set X-Content-Type-Options: "nosniff"
+  Header set X-Frame-Options: "sameorigin"
+  Header set X-XSS-Protection "1; mode=block" always;
+  <IfModule mod_ssl.c>
+      SSLProtocol all -SSLv3
+  </IfModule>
 
-# Apache MPM(Multi Processing Module)
-# Setting Value: prefork OR worker OR event
-apache_module_mpm: prefork
-
-apache_performance_cfg:
-  timeout: 60
-  keep_alive: true
-  max_keep_alive_requests: 100
-  keep_alive_timeout: 5
-  max_connections_per_child: 0
-  prefork:
-    start_servers: 5
-    min_spare_servers: 5
-    max_spare_servers: 10
-    max_request_workers: 256
-    server_limit: 256
-  worker:
-    start_servers: 3
-    min_spare_threads: 75
-    max_spare_threads: 250
-    max_request_workers: 400
-    threads_per_child: 25
-    thread_limit: 64
-    server_limit: 16
-  event:
-    start_servers: 3
-    min_spare_threads: 75
-    max_spare_threads: 250
-    max_request_workers: 400
-    threads_per_child: 25
-    thread_limit: 64
-    server_limit: 16
-    async_request_worker_factor: 2
-
-apache_ssl_cfg:
-  protocol:
-    - all
-    - "-SSLv3"
-    - "-TLSv1"
-    - "-TLSv1.1"
-  cipher_suite:
-    - ECDHE-ECDSA-AES128-GCM-SHA256
-    - ECDHE-RSA-AES128-GCM-SHA256
-    - ECDHE-ECDSA-AES256-GCM-SHA384
-    - ECDHE-RSA-AES256-GCM-SHA384
-    - ECDHE-ECDSA-CHACHA20-POLY1305
-    - ECDHE-RSA-CHACHA20-POLY1305
-    - DHE-RSA-AES128-GCM-SHA256
-    - DHE-RSA-AES256-GCM-SHA384
-  honor_cipher_order: false
-
-apache_module_base:
-  buffer: false
-  watchdog: false
-  heartbeat: false
-  heartmonitor: false
-  usertrack: false
-  dialup: false
-  charset_lite: false
-  log_debug: false
-  ratelimit: false
-  reflector: false
-  request: false
-  sed: false
-  speling: false
-
-apache_module_dav:
-  dav: true
-  dav_fs: true
-  dav_lock: true
-
-apache_module_lua: true
-
-apache_module_lbmethod:
-  bybusyness: true
-  byrequests: true
-  bytraffic: true
-  heartbeat: true
-
-apache_module_proxy:
-  ajp: true
-  balancer: true
-  connect: true
-  express: true
-  fcgi: true
-  fdpass: true
-  ftp: true
-  http: true
-  wstunnel: true
