@@ -1,7 +1,11 @@
 ---
 apache_packages:
-  - httpd
+  - apache2
   - mod_ssl
+
+apache_modules:
+  - name: ssl
+    state: enabled
 
 apache_vhosts:
   - name: 00-default

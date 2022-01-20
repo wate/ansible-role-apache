@@ -90,7 +90,7 @@
   file:
     path: /etc/httpd/sites-enabled/{{ item.name | default(item.server_name) }}.conf
     src: "{{ omit if item.disabled | default(false) else '/etc/httpd/sites-available/' + item.name | default(item.server_name) + '.conf' }}"
-    state: "{{ 'absent' if item.disabled | default(false) else 'link' }}"
+    state: "{{ item.disabled | default(false) | ternary('absent', 'link') }}"
     mode: "0644"
   loop: "{{ exist_virtualhosts }}"
   loop_control:
@@ -112,22 +112,10 @@
   loop_control:
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
-- name: install firewalld
-  yum:
-    name: firewalld
-- name: allow http port
-  firewalld:
-    service: http
-    permanent: true
-    state: enabled
-  notify: restart firewalld
-- name: allow https port
-  firewalld:
-    service: https
-    permanent: true
-    state: enabled
-  when: "'mod_ssl' in apache_packages"
-  notify: restart firewalld
+- name: allow http and https port
+  ufw:
+    rule: allow
+    name: "WWW Full"
 - name: Apache is active and enabled on system startup
   systemd:
     name: httpd
