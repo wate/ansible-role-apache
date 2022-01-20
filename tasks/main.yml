@@ -14,7 +14,7 @@
     - "{{ apache_conf_enabled_dir }}"
     - "{{ apache_site_available_dir }}"
     - "{{ apache_site_enabled_dir }}"
-    - "{{ apache_config_base_dir }}/snippets"
+    - "{{ apache_snippet_dir }}"
 - name: append include settings on base config
   lineinfile:
     path: "{{ apache_config_base_dir }}/apache2.conf"
@@ -29,8 +29,6 @@
     name: "{{ item.name }}"
     state: "{{ item.disabled | default(false) | ternary('present', 'absent') }}"
   loop: "{{ apache_modules }}"
-  # a2enconf
-  # a2ensite
 - name: create custom setting file
   template:
     src: custom.conf.j2
@@ -45,7 +43,7 @@
 - name: copy snippet files
   copy:
     src: "{{ item }}"
-    dest: "{{ apache_config_base_dir }}/snippets/{{ item | basename }}"
+    dest: "{{ apache_snippet_dir }}/{{ item | basename }}"
     mode: preserve
   loop: "{{ lookup('fileglob', 'files/*.conf', wantlist=True) }}"
 - name: set virtualhosts variables

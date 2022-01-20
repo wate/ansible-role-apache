@@ -10,17 +10,17 @@ apache_packages:
   # - dehydrated-apache2
 
 apache_modules:
+  - name: headers
   - name: ssl
-    disabled: true
 
 apache_vhosts:
-  - name: 00-default
+  - name: 000-default
     default: true
     server_name: www.example.com
     server_alias:
       - example.com
     # include:
-    #   -/etc/httpd/snippets/redirect_non_www.conf
+    #   - "{{ apache_snippet_dir }}/redirect_non_www.conf"
     document_root: /var/www/html
     # directory_index:
     #   - index.html
@@ -40,7 +40,7 @@ apache_vhosts:
     #   log_level: warn
     # transfer_log:
     #   path: logs/transfer_log
-    #   format: %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"'
+    #   format: '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"'
     # alias:
     #   - from: /phpMyAdmin
     #     to: /usr/share/phpMyAdmin
@@ -100,7 +100,7 @@ apache_vhosts:
     # document_root_owner: root
     # document_root_group: root
     # document_root_mode: "0755"
-  - name: 99-status
+  - name: 999-status
     ip: 127.0.0.1
     port: 1080
     virtualhost_before_setting: |
@@ -128,7 +128,7 @@ apache_extra_cfg: |
   Header set X-Content-Type-Options: "nosniff"
   Header set X-Frame-Options: "sameorigin"
   Header set X-XSS-Protection "1; mode=block" always;
-  <IfModule mod_ssl.c>
-      SSLProtocol all -SSLv3
-  </IfModule>
+  # <IfModule mod_ssl.c>
+  #     SSLProtocol all -SSLv3
+  # </IfModule>
 
