@@ -42,10 +42,8 @@ apache_vhosts:
     #   path: logs/transfer_log
     #   format: '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"'
     # alias:
-    #   - from: /phpMyAdmin
-    #     to: /usr/share/phpMyAdmin
-    #   - from: /phpmyAdmin
-    #     to: /usr/share/phpMyAdmin
+    #   - from: /.well-known/acme-challenge/
+    #     to: /var/lib/dehydrated/acme-challenges/
     # proxy_pass:
     #   - from: /
     #     to: "http://127.0.0.1:8080/"
@@ -125,9 +123,9 @@ apache_extra_cfg: |
   <DirectoryMatch "/\.git">
       Require all denied
   </DirectoryMatch>
-  Header set X-Content-Type-Options: "nosniff"
-  Header set X-Frame-Options: "sameorigin"
-  Header set X-XSS-Protection "1; mode=block" always;
+  # Header set X-Content-Type-Options: "nosniff"
+  # Header set X-Frame-Options: "sameorigin"
+  # Header set X-XSS-Protection "1; mode=block" always;
   # <IfModule mod_ssl.c>
   #     SSLProtocol all -SSLv3
   # </IfModule>
