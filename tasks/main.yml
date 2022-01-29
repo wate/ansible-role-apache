@@ -24,10 +24,11 @@
     - "IncludeOptional mods-enabled/*.conf"
     - "IncludeOptional conf-enabled/*.conf"
     - "IncludeOptional sites-enabled/*.conf"
-- name: update load base module
-  apache2_module:
-    name: "{{ item.name }}"
-    state: "{{ item.disabled | default(false) | ternary('present', 'absent') }}"
+- name: update load module
+  command: "{{ item.disabled | default(false) | ternary('a2dismod', 'a2enmod') }} {{ item.name }}"
+  args:
+    creates: "{{ item.disabled | default(false) | ternary(omit, apache_module_enabled_dir + '/' + item.name + '.load') }}"
+    removes: "{{ item.disabled | default(false) | ternary(apache_module_enabled_dir + '/' + item.name + '.load', omit) }}"
   loop: "{{ apache_modules }}"
 - name: create custom setting file
   template:
