@@ -72,11 +72,10 @@
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
 - name: enable / disable virtualhost
-  file:
-    path: "{{ apache_site_enabled_dir }}/{{ item.name | default(item.server_name) }}.conf"
-    src: "{{ item.disabled | default(false) | ternary(apache_site_available_dir + '/' + item.name | default(item.server_name) + '.conf', omit) }}"
-    state: "{{ item.disabled | default(false) | ternary('absent', 'link') }}"
-    mode: "0644"
+  command: "{{ item.disabled | default(false) | ternary('a2dissite', 'a2ensite') }} {{ item.name | default(item.server_name) }}"
+  args:
+    creates: "{{ item.disabled | default(false) | ternary(omit, apache_site_enabled_dir + '/' + (item.name | default(item.server_name)) + '.conf') }}"
+    removes: "{{ item.disabled | default(false) | ternary(apache_site_enabled_dir + '/' + (item.name | default(item.server_name)) + '.conf', omit) }}"
   loop: "{{ exist_virtualhosts }}"
   loop_control:
     label: "{{ item.name | default(item.server_name) }}"
