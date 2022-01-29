@@ -13,6 +13,7 @@ apache_packages:
 apache_modules:
   - name: headers
   - name: ssl
+  - name: proxy
 
 apache_vhosts:
   - name: 000-default

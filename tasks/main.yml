@@ -73,7 +73,7 @@
 - name: enable / disable virtualhost
   file:
     path: "{{ apache_site_enabled_dir }}/{{ item.name | default(item.server_name) }}.conf"
-    src: "{{ omit if item.disabled | default(false) | ternary(apache_site_available_dir + '/' + item.name | default(item.server_name) + '.conf', omit) }}"
+    src: "{{ item.disabled | default(false) | ternary(apache_site_available_dir + '/' + item.name | default(item.server_name) + '.conf', omit) }}"
     state: "{{ item.disabled | default(false) | ternary('absent', 'link') }}"
     mode: "0644"
   loop: "{{ exist_virtualhosts }}"
