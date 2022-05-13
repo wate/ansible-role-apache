@@ -1,12 +1,12 @@
 ---
 - name: install ufw
-  apt:
+  ansible.builtin.apt:
     name: ufw
 - name: install apache
-  apt:
+  ansible.builtin.apt:
     name: "{{ apache_packages }}"
 - name: create apache setting directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     mode: "0755"
     state: directory
@@ -19,7 +19,7 @@
     - "{{ apache_site_enabled_dir }}"
     - "{{ apache_snippet_dir }}"
 - name: append include settings on base config
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ apache_config_base_dir }}/apache2.conf"
     line: "{{ item }}"
   loop:
@@ -28,35 +28,35 @@
     - "IncludeOptional conf-enabled/*.conf"
     - "IncludeOptional sites-enabled/*.conf"
 - name: update load module
-  command: "{{ item.disabled | default(false) | ternary('a2dismod', 'a2enmod') }} {{ item.name }}"
+  ansible.builtin.command: "{{ item.disabled | default(false) | ternary('a2dismod', 'a2enmod') }} {{ item.name }}"
   args:
     creates: "{{ item.disabled | default(false) | ternary(omit, apache_module_enabled_dir + '/' + item.name + '.load') }}"
     removes: "{{ item.disabled | default(false) | ternary(apache_module_enabled_dir + '/' + item.name + '.load', omit) }}"
   loop: "{{ apache_modules }}"
 - name: create custom setting file
-  template:
+  ansible.builtin.template:
     src: custom.conf.j2
     dest: "{{ apache_conf_available_dir }}/z-custom.conf"
     mode: "0644"
   notify: restart apache
 - name: enable custom setting
-  command: a2enconf z-custom
+  ansible.builtin.command: a2enconf z-custom
   args:
     creates: "{{ apache_conf_enabled_dir }}/z-custom.conf"
   notify: restart apache
 - name: copy snippet files
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ apache_snippet_dir }}/{{ item | basename }}"
     mode: preserve
   loop: "{{ lookup('fileglob', 'files/*.conf', wantlist=True) }}"
 - name: set virtualhosts variables
-  set_fact:
+  ansible.builtin.set_fact:
     exist_virtualhosts: "{{ apache_vhosts | selectattr('removed', 'undefined') | list }}"
     removed_virtualhosts: "{{ apache_vhosts | selectattr('removed', 'defined') | list }}"
     create_doc_root_directoories: "{{ apache_vhosts | selectattr('document_root', 'defined') | selectattr('document_root_create', 'defined') | list }}"
 - name: create document root directory
-  file:
+  ansible.builtin.file:
     path: "{{ item.document_root }}"
     state: directory
     owner: "{{ item.document_root_owner | default(omit) }}"
@@ -66,7 +66,7 @@
   loop_control:
     label: "{{ item.name | default(item.server_name) }}"
 - name: create virtualhost setting files
-  template:
+  ansible.builtin.template:
     src: virtualhost.conf.j2
     dest: "{{ apache_site_available_dir }}/{{ item.name | default(item.server_name) }}.conf"
     mode: "0644"
@@ -75,7 +75,7 @@
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
 - name: enable / disable virtualhost
-  command: "{{ item.disabled | default(false) | ternary('a2dissite', 'a2ensite') }} {{ item.name | default(item.server_name) }}"
+  ansible.builtin.command: "{{ item.disabled | default(false) | ternary('a2dissite', 'a2ensite') }} {{ item.name | default(item.server_name) }}"
   args:
     creates: "{{ item.disabled | default(false) | ternary(omit, apache_site_enabled_dir + '/' + (item.name | default(item.server_name)) + '.conf') }}"
     removes: "{{ item.disabled | default(false) | ternary(apache_site_enabled_dir + '/' + (item.name | default(item.server_name)) + '.conf', omit) }}"
@@ -84,7 +84,7 @@
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
 - name: remove virtualhost setting symlink
-  file:
+  ansible.builtin.file:
     path: "{{ apache_site_enabled_dir }}/{{ item.name | default(item.server_name) }}.conf"
     state: absent
   loop: "{{ removed_virtualhosts }}"
@@ -92,7 +92,7 @@
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
 - name: remove virtualhost setting files
-  file:
+  ansible.builtin.file:
     path: "{{ apache_site_available_dir }}/{{ item.name | default(item.server_name) }}.conf"
     state: absent
   loop: "{{ removed_virtualhosts }}"
@@ -104,7 +104,7 @@
     rule: allow
     name: "WWW Full"
 - name: Apache is active and enabled on system startup
-  systemd:
+  ansible.builtin.systemd:
     name: apache2
     state: started
     enabled: true
