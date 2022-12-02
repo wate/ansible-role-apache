@@ -1,3 +1,4 @@
+---
 apache_config_base_dir: /etc/apache2
 
 apache_module_available_dir: "{{ apache_config_base_dir }}/mods-available"

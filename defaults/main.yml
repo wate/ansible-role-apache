@@ -124,9 +124,9 @@ apache_secrity_cfg:
   trace_enable: false
   server_tokens: Prod
   headers:
-    "X-Frame-Options": SAMEORIGIN
-    "X-Content-Type-Options": nosniff
-    "X-XSS-Protection": '"1; mode=block"'
+    X-Frame-Options: SAMEORIGIN
+    X-Content-Type-Options: nosniff
+    X-XSS-Protection: '"1; mode=block"'
 
 apache_extra_cfg: |
   ## Security

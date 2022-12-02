@@ -17,10 +17,10 @@
     path: "{{ apache_config_base_dir }}/apache2.conf"
     line: "{{ item }}"
   loop:
-    - "IncludeOptional mods-enabled/*.load"
-    - "IncludeOptional mods-enabled/*.conf"
-    - "IncludeOptional conf-enabled/*.conf"
-    - "IncludeOptional sites-enabled/*.conf"
+    - IncludeOptional mods-enabled/*.load
+    - IncludeOptional mods-enabled/*.conf
+    - IncludeOptional conf-enabled/*.conf
+    - IncludeOptional sites-enabled/*.conf
 - name: update load module
   ansible.builtin.command:
     cmd: "{{ item.disabled | default(false) | ternary('a2dismod', 'a2enmod') }} {{ item.name }}"
