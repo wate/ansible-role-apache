@@ -1,6 +1,6 @@
 ---
 - name: allow http and https port
-  ufw:
+  community.general.ufw:
     rule: allow
     name: WWW Full
 - name: Apache is active and enabled on system startup

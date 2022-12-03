@@ -1,18 +1,41 @@
 apache
-=========
+=================
 
-[![Build Status](https://travis-ci.org/wate/ansible-role-apache.svg?branch=master)](https://travis-ci.org/wate/ansible-role-apache)
+setup Apache web server
 
-Apacheのインストールとセットアップを行います
+OS Platform
+-----------------
+
+### Debian
+
+- bullseye
+- buster
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### `apache_packages`
 
+インストールするパッケージ
+
+### `apache_modules`
+
+モジュールの設定
+
+### `apache_vhosts`
+
+バーチャルホストの設定
+
+### `apache_secrity_cfg`
+
+全体のセキュリティ設定
+
+### `apache_extra_cfg`
+
+追加設定
 
 Example Playbook
-----------------
+--------------
 
 ```yaml
 - hosts: servers
@@ -21,6 +44,6 @@ Example Playbook
 ```
 
 License
--------
+--------------
 
 Apache License 2.0

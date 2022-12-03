@@ -1,4 +1,7 @@
 ---
+## --------------
+## インストールするパッケージ
+## --------------
 apache_packages:
   - apache2
   - libapache2-mod-php{{ php_version | default('') }}
@@ -10,6 +13,9 @@ apache_packages:
   # - libapache2-mod-log-slow
   # - libapache2-mod-geoip
 
+## --------------
+## モジュールの設定
+## --------------
 apache_modules:
   # - name: mpm_prefork
   #   disabled: true
@@ -23,6 +29,9 @@ apache_modules:
   - name: proxy_http2
   - name: proxy_fcgi
 
+## --------------
+## バーチャルホストの設定
+## --------------
 apache_vhosts:
   - name: 000-default
     default: true
@@ -120,6 +129,9 @@ apache_vhosts:
         Require ip 127.0.0.1
       </Location>
 
+## --------------
+## 全体のセキュリティ設定
+## --------------
 apache_secrity_cfg:
   trace_enable: false
   server_tokens: Prod
@@ -128,6 +140,9 @@ apache_secrity_cfg:
     X-Content-Type-Options: nosniff
     X-XSS-Protection: '"1; mode=block"'
 
+## --------------
+## 追加設定
+## --------------
 apache_extra_cfg: |
   ## Security
   <DirectoryMatch "/\.git">
