@@ -1,4 +1,4 @@
 ---
-- name: install ufw
+- name: Innstall ufw
   ansible.builtin.apt:
     name: ufw
