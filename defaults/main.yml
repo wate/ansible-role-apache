@@ -46,7 +46,7 @@ apache_vhosts:
     #   - index.php
     # options:
     #   - "-Indexes"
-    #   - "+FollowSymLinks"
+    #   - "+SymLinksIfOwnerMatch"
     # allow_override: None
     # require:
     #   - type: ip
