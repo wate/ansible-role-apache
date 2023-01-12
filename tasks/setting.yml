@@ -27,6 +27,8 @@
     creates: "{{ item.disabled | default(false) | ternary(omit, apache_module_enabled_dir + '/' + item.name + '.load') }}"
     removes: "{{ item.disabled | default(false) | ternary(apache_module_enabled_dir + '/' + item.name + '.load', omit) }}"
   loop: "{{ apache_modules }}"
+  loop_control:
+    label: "{{ item.name }}"
 - name: Create custom setting file
   ansible.builtin.template:
     src: custom.conf.j2
@@ -44,6 +46,8 @@
     dest: "{{ apache_snippet_dir }}/{{ item | basename }}"
     mode: preserve
   loop: "{{ lookup('fileglob', 'files/*.conf', wantlist=True) }}"
+  loop_control:
+    label: "{{ item | basename }}"
 - name: set virtualhosts variables
   ansible.builtin.set_fact:
     exist_virtualhosts: "{{ apache_vhosts | selectattr('removed', 'undefined') | list }}"
