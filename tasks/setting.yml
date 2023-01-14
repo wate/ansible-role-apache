@@ -97,7 +97,3 @@
   loop_control:
     label: "{{ item.name | default(item.server_name) }}"
   notify: restart apache
-- name: Update goaccess setting
-  ansible.builtin.import_tasks:
-    file: setting/goaccess.yml
-  when: "'goaccess' in apache_packages"
