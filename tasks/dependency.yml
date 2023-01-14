@@ -1,11 +1,4 @@
 ---
-- name: Install dependency packages
-  ansible.builtin.apt:
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gnupg
 - name: Install ufw
   ansible.builtin.apt:
     name: ufw
