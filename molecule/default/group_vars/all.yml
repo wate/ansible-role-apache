@@ -103,5 +103,5 @@ apache_vhosts:
     document_root: /var/www/www.example.jp
     document_root_create: true
     document_root_owner: vagrant
-    document_root_group: wheel
+    document_root_group: www-data
     document_root_mode: "0755"
