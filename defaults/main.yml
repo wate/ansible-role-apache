@@ -33,7 +33,7 @@ apache_modules:
 ## バーチャルホストの設定
 ## --------------
 apache_vhosts:
-  - name: 000-default
+  - name: "000-default"
     default: true
     server_name: www.example.com
     server_alias:
