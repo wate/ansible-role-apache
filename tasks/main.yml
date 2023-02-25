@@ -11,9 +11,10 @@
       paths:
         - vars
 - name: Include variable file
-  ansible.builtin.include_vars: "{{ variable_file }}"
+  ansible.builtin.include_vars:
+    file: "{{ variable_file }}"
   when: variable_file | length > 0
-- name: Include dependency package task
+- name: Import dependency package task
   ansible.builtin.import_tasks:
     file: dependency.yml
   tags:
