@@ -18,22 +18,22 @@
     file: dependency.yml
   tags:
     - role_apache_dependency
-- name: Include repository task
+- name: Import repository task
   ansible.builtin.import_tasks:
     file: repository.yml
   tags:
     - role_apache_repository
-- name: Include package task
+- name: Import package task
   ansible.builtin.import_tasks:
     file: package.yml
   tags:
     - role_apache_package
-- name: Include setting task
+- name: Import setting task
   ansible.builtin.import_tasks:
     file: setting.yml
   tags:
     - role_apache_setting
-- name: Include service task
+- name: Import service task
   ansible.builtin.import_tasks:
     file: service.yml
   tags:
