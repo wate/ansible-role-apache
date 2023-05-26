@@ -7,12 +7,16 @@
       - curl
       - gnupg
       - ufw
-- name: Add apt signing key
-  ansible.builtin.apt_key:
-    url: https://deb.goaccess.io/gnugpg.key
-    state: present
-- name: Add goaccess repository
-  ansible.builtin.apt_repository:
-    filename: goaccess
-    repo: deb https://deb.goaccess.io/ {{ ansible_facts.distribution_release }} main
-    state: present
+- name: Append goaccess repository
+  when: apache_append_goaccess_repository
+  block:
+    - name: Add apt signing key
+      ansible.builtin.get_url:
+        url: "{{ apache_goaccess_apt_key_url }}"
+        dest: "{{ apache_goaccess_apt_key_dest }}"
+        mode: "0644"
+    - name: Add goaccess repository
+      ansible.builtin.apt_repository:
+        filename: goaccess
+        repo: deb [signed-by={{ nginx_goaccess_apt_key_dest }}] https://deb.goaccess.io/ {{ ansible_facts.distribution_release }} main
+        state: present

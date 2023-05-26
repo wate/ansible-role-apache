@@ -1,6 +1,9 @@
 ---
 apache_config_base_dir: /etc/apache2
 
+apache_goaccess_apt_key_url: https://deb.goaccess.io/gnugpg.key
+apache_goaccess_apt_key_dest: /usr/share/keyrings/goaccess.gpg.key
+
 apache_module_available_dir: "{{ apache_config_base_dir }}/mods-available"
 apache_module_enabled_dir: "{{ apache_config_base_dir }}/mods-enabled"
 apache_conf_available_dir: "{{ apache_config_base_dir }}/conf-available"

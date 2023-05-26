@@ -14,6 +14,11 @@ apache_packages:
   # - libapache2-mod-geoip
 
 ## --------------
+## goaccessリポジトリを追加するか否か
+## --------------
+apache_append_goaccess_repository: true
+
+## --------------
 ## モジュールの設定
 ## --------------
 apache_modules:

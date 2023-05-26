@@ -20,6 +20,10 @@ Role Variables
 
 インストールするパッケージ
 
+### `apache_append_goaccess_repository`
+
+goaccessリポジトリを追加するか否か
+
 ### `apache_modules`
 
 モジュールの設定
