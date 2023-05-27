@@ -18,5 +18,5 @@
     - name: Add goaccess repository
       ansible.builtin.apt_repository:
         filename: goaccess
-        repo: deb [signed-by={{ nginx_goaccess_apt_key_dest }}] https://deb.goaccess.io/ {{ ansible_facts.distribution_release }} main
+        repo: deb [signed-by={{ apache_goaccess_apt_key_dest }}] https://deb.goaccess.io/ {{ ansible_facts.distribution_release }} main
         state: present
