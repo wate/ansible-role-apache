@@ -4,7 +4,7 @@
     rule: allow
     name: WWW Full
 - name: Service apache is active and enabled on system startup
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     name: apache2
     state: started
     enabled: true
