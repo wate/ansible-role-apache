@@ -17,7 +17,7 @@ apache_packages:
 ## --------------
 ## goaccessリポジトリを追加するか否か
 ## --------------
-apache_append_goaccess_repository: false
+apache_append_goaccess_repository: true
 
 ## --------------
 ## モジュールの設定
