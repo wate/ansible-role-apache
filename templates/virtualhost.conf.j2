@@ -1,19 +1,19 @@
 # ------------------------
 # {{ ansible_managed }}
 # ------------------------
-{% if item.server_name is defined -%}
-# {{ item.server_name }} VirtualHost Setting
+{% if vhost_setting.server_name is defined -%}
+# {{ vhost_setting.server_name }} VirtualHost Setting
 {% endif -%}
-{% if item.virtualhost_before_setting is defined %}
-{{ item.virtualhost_before_setting }}
+{% if vhost_setting.virtualhost_before_setting is defined %}
+{{ vhost_setting.virtualhost_before_setting }}
 {% endif %}
-{% if item.ssl.certificate_file is defined %}
-<VirtualHost {{ item.default |default(false) | ternary('_default_', "*") }}:80>
-    {% if item.server_name is defined -%}
-    ServerName {{ item.server_name }}
+{% if vhost_setting.ssl.certificate_file is defined %}
+<VirtualHost {{ vhost_setting.default_server |default(false) | ternary('_default_', "*") }}:80>
+    {% if vhost_setting.server_name is defined -%}
+    ServerName {{ vhost_setting.server_name }}
     {% endif -%}
-    {% if item.server_alias is defined -%}
-    ServerAlias {{ item.server_alias is string | ternary(item.server_alias, item.server_alias | join(' ')) }}
+    {% if vhost_setting.server_alias is defined -%}
+    ServerAlias {{ vhost_setting.server_alias is string | ternary(vhost_setting.server_alias, vhost_setting.server_alias | join(' ')) }}
     {% endif -%}
     RewriteEngine On
     RewriteCond %{REQUEST_URI} !^/\.well\-known/acme\-challenge/
@@ -21,41 +21,41 @@
 </VirtualHost>
 {% endif %}
 
-{% set vhost_ip = item.default | default(false) | ternary('_default_', "*") -%}
-{% if item.ip is defined -%}
-{% set vhost_ip = item.ip -%}
+{% set vhost_ip = vhost_setting.default_server | default(false) | ternary('_default_', "*") -%}
+{% if vhost_setting.ip is defined -%}
+{% set vhost_ip = vhost_setting.ip -%}
 {% endif -%}
 
-{% set vhost_port = item.ssl.certificate_file is defined | ternary('443', "80") -%}
-{% if item.port is defined -%}
-{% set vhost_port = item.port -%}
+{% set vhost_port = vhost_setting.ssl.certificate_file is defined | ternary('443', "80") -%}
+{% if vhost_setting.port is defined -%}
+{% set vhost_port = vhost_setting.port -%}
 {% endif -%}
 
 <VirtualHost {{ vhost_ip }}:{{ vhost_port }}>
-  {% if item.server_name is defined -%}
-  ServerName {{ item.server_name }}
+  {% if vhost_setting.server_name is defined -%}
+  ServerName {{ vhost_setting.server_name }}
   {% endif -%}
-  {% if item.server_alias is defined -%}
-  ServerAlias {{ item.server_alias is string | ternary(item.server_alias, item.server_alias | join(' ')) }}
+  {% if vhost_setting.server_alias is defined -%}
+  ServerAlias {{ vhost_setting.server_alias is string | ternary(vhost_setting.server_alias, vhost_setting.server_alias | join(' ')) }}
   {% endif -%}
-  {% if item.include is defined -%}
-  {% for include_file in item.include -%}
+  {% if vhost_setting.include is defined -%}
+  {% for include_file in vhost_setting.include -%}
   Include {{ include_file }}
   {% endfor -%}
   {% endif -%}
-  {% if item.document_root is defined -%}
-  DocumentRoot {{ item.document_root }}
-  <Directory {{ item.document_root }}>
-    {% if item.options is defined -%}
-    Options {{ item.options is string | ternary(item.options, item.options | join(' ')) }}
+  {% if vhost_setting.document_root is defined -%}
+  DocumentRoot {{ vhost_setting.document_root }}
+  <Directory {{ vhost_setting.document_root }}>
+    {% if vhost_setting.options is defined -%}
+    Options {{ vhost_setting.options is string | ternary(vhost_setting.options, vhost_setting.options | join(' ')) }}
     {% endif -%}
 
-    {% if item.allow_override is defined -%}
-    AllowOverride {{ item.allow_override }}
+    {% if vhost_setting.allow_override is defined -%}
+    AllowOverride {{ vhost_setting.allow_override }}
     {% endif -%}
 
-    {% if item.require is defined -%}
-    {% for directive in item.require -%}
+    {% if vhost_setting.require is defined -%}
+    {% for directive in vhost_setting.require -%}
     Require {{ directive.not | default(false) | ternary('not ', '') }}{{ directive.type }} {{ directive.value }}
     {% endfor -%}
     {% else -%}
@@ -64,99 +64,99 @@
   </Directory>
   {% endif -%}
 
-  {% if item.alias is defined -%}
-  {% for directive in item.alias -%}
+  {% if vhost_setting.alias is defined -%}
+  {% for directive in vhost_setting.alias -%}
   Alias {{ directive.from }} {{ directive.to }}
   {% endfor -%}
   {% endif -%}
 
-  {% if item.directory_index is defined -%}
-  DirectoryIndex {{ item.directory_index is string | ternary(item.directory_index, item.directory_index | join(' ')) }}
+  {% if vhost_setting.directory_index is defined -%}
+  DirectoryIndex {{ vhost_setting.directory_index is string | ternary(vhost_setting.directory_index, vhost_setting.directory_index | join(' ')) }}
   {% endif -%}
 
-  {% if item.custom_log is defined -%}
-  {% if item.custom_log.env is defined %}
-  CustomLog {{ item.custom_log.path }} {{ item.custom_log.format }} env={{ item.custom_log.env }}
+  {% if vhost_setting.custom_log is defined -%}
+  {% if vhost_setting.custom_log.env is defined %}
+  CustomLog {{ vhost_setting.custom_log.path }} {{ vhost_setting.custom_log.format }} env={{ vhost_setting.custom_log.env }}
   {% else -%}
-  CustomLog {{ item.custom_log.path }} {{ item.custom_log.format }}
+  CustomLog {{ vhost_setting.custom_log.path }} {{ vhost_setting.custom_log.format }}
   {% endif -%}
   {% endif -%}
 
-  {% if item.error_log is defined -%}
-  ErrorLog {{ item.error_log.path }}
-  LogLevel {{ item.error_log.log_level | default('warn') }}
+  {% if vhost_setting.error_log is defined -%}
+  ErrorLog {{ vhost_setting.error_log.path }}
+  LogLevel {{ vhost_setting.error_log.log_level | default('warn') }}
   {% endif -%}
 
-  {% if item.transfer_log is defined -%}
-  {% if item.transfer_log.format is defined -%}
-  LogFormat "{{ item.transfer_log.format }}"
+  {% if vhost_setting.transfer_log is defined -%}
+  {% if vhost_setting.transfer_log.format is defined -%}
+  LogFormat "{{ vhost_setting.transfer_log.format }}"
   {% endif -%}
-  TransferLog {{ item.transfer_log.path }}
+  TransferLog {{ vhost_setting.transfer_log.path }}
   {% endif -%}
 
-  {% if item.proxy_pass is defined -%}
-  {% for directive in item.proxy_pass -%}
+  {% if vhost_setting.proxy_pass is defined -%}
+  {% for directive in vhost_setting.proxy_pass -%}
   ProxyPass {{ directive.from }} {{ directive.to }}
   {% endfor -%}
   {% endif -%}
 
-  {% if item.proxy_pass_reverse is defined -%}
-  {% for directive in item.proxy_pass_reverse -%}
+  {% if vhost_setting.proxy_pass_reverse is defined -%}
+  {% for directive in vhost_setting.proxy_pass_reverse -%}
   ProxyPassReverse {{ directive.from }} {{ directive.to }}
   {% endfor -%}
   {% endif -%}
 
-  {% if item.proxy_pass_match is defined -%}
-  {% for directive in item.proxy_pass_match -%}
+  {% if vhost_setting.proxy_pass_match is defined -%}
+  {% for directive in vhost_setting.proxy_pass_match -%}
   ProxyPassMatch {{ directive.pattern }} {{ directive.to }}
   {% endfor -%}
   {% endif -%}
 
-  {% if item.ssl.certificate_file is defined -%}
+  {% if vhost_setting.ssl.certificate_file is defined -%}
   SSLEngine on
   # Server Certificate:
-  SSLCertificateFile {{ item.ssl.certificate_file }}
+  SSLCertificateFile {{ vhost_setting.ssl.certificate_file }}
   # Server Private Key:
-  SSLCertificateKeyFile {{ item.ssl.certificate_key_file }}
-  {% if item.ssl.certificate_chain_file is defined -%}
+  SSLCertificateKeyFile {{ vhost_setting.ssl.certificate_key_file }}
+  {% if vhost_setting.ssl.certificate_chain_file is defined -%}
   # Server Certificate Chain:
-  SSLCertificateChainFile {{ item.ssl.certificate_chain_file }}
+  SSLCertificateChainFile {{ vhost_setting.ssl.certificate_chain_file }}
   {% endif -%}
 
-  {% if item.ssl.protocol is defined -%}
-  SSLProtocol {{ item.ssl.protocol | join(' ') }}
+  {% if vhost_setting.ssl.protocol is defined -%}
+  SSLProtocol {{ vhost_setting.ssl.protocol | join(' ') }}
   {% endif -%}
 
-  {% if item.ssl.cipher_suite is defined -%}
-  SSLCipherSuite {{ item.ssl.cipher_suite | join(':') }}
+  {% if vhost_setting.ssl.cipher_suite is defined -%}
+  SSLCipherSuite {{ vhost_setting.ssl.cipher_suite | join(':') }}
   {% endif -%}
 
-  {% if item.ssl.honor_cipher_order is defined -%}
-  SSLHonorCipherOrder {{ item.ssl.honor_cipher_order | ternary('on', 'off') }}
+  {% if vhost_setting.ssl.honor_cipher_order is defined -%}
+  SSLHonorCipherOrder {{ vhost_setting.ssl.honor_cipher_order | ternary('on', 'off') }}
   {% endif -%}
 
-  {% if item.ssl.compression is defined -%}
-  SSLCompression {{ item.ssl.compression | ternary('on', 'off') }}
+  {% if vhost_setting.ssl.compression is defined -%}
+  SSLCompression {{ vhost_setting.ssl.compression | ternary('on', 'off') }}
   {% endif -%}
 
-  {% if item.ssl.stapling_responder_timeout is defined -%}
-  SSLStaplingResponderTimeout {{ item.ssl.stapling_responder_timeout }}
+  {% if vhost_setting.ssl.stapling_responder_timeout is defined -%}
+  SSLStaplingResponderTimeout {{ vhost_setting.ssl.stapling_responder_timeout }}
   {% endif -%}
 
-  {% if item.ssl.stapling_return_responder_errors is defined -%}
-  SSLStaplingReturnResponderErrors {{ item.ssl.stapling_return_responder_errors | ternary('on', 'off') }}
+  {% if vhost_setting.ssl.stapling_return_responder_errors is defined -%}
+  SSLStaplingReturnResponderErrors {{ vhost_setting.ssl.stapling_return_responder_errors | ternary('on', 'off') }}
   {% endif -%}
 
-  {% if item.ssl.stapling_cache is defined -%}
-  SSLStaplingCache {{ item.ssl.stapling_cache }}
+  {% if vhost_setting.ssl.stapling_cache is defined -%}
+  SSLStaplingCache {{ vhost_setting.ssl.stapling_cache }}
   {% endif -%}
 
-  {% if item.ssl.hsts is defined -%}
-  Header always set Strict-Transport-Security "{{ item.ssl.hsts }}"
+  {% if vhost_setting.ssl.hsts is defined -%}
+  Header always set Strict-Transport-Security "{{ vhost_setting.ssl.hsts }}"
   {% endif -%}
   {% endif -%}
 
-  {% if item.extra_setting is defined -%}
-  {{ item.extra_setting | indent(2) }}
+  {% if vhost_setting.extra_setting is defined -%}
+  {{ vhost_setting.extra_setting | indent(2) }}
   {% endif -%}
 </VirtualHost>

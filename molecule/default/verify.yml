@@ -36,26 +36,46 @@
         that:
           - result is not changed
     # ファイルのテスト
-    - name: Check virtualhost setting
-      ansible.builtin.stat:
-        path: /etc/apache2/sites-available/000-default.conf
-      register: result
-    - name: Assert file
-      ansible.builtin.assert:
-        that:
-          - result.stat.exists
-    - name: Check virtualhost enabled
-      ansible.builtin.stat:
-        path: /etc/apache2/sites-enabled/000-default.conf
-      register: result
-    - name: Assert file
-      ansible.builtin.assert:
-        that:
-          - result.stat.exists
-          - result.stat.islnk
-          - result.stat.lnk_source == '/etc/apache2/sites-available/000-default.conf'
+    - name: Test virtualhost enable
+      block:
+        - name: Check virtualhost setting
+          ansible.builtin.stat:
+            path: /etc/apache2/sites-available/000-default.conf
+          register: result
+        - name: Assert file
+          ansible.builtin.assert:
+            that:
+              - result.stat.exists
+        - name: Check virtualhost enabled
+          ansible.builtin.stat:
+            path: /etc/apache2/sites-enabled/000-default.conf
+          register: result
+        - name: Assert file
+          ansible.builtin.assert:
+            that:
+              - result.stat.exists
+              - result.stat.islnk
+              - result.stat.lnk_source == '/etc/apache2/sites-available/000-default.conf'
+    - name: Test virtualhost disable
+      block:
+        - name: Check virtualhost setting
+          ansible.builtin.stat:
+            path: /etc/apache2/sites-available/001-test-desable-virtualhost.conf
+          register: result
+        - name: Assert file
+          ansible.builtin.assert:
+            that:
+              - result.stat.exists
+        - name: Check virtualhost disabled
+          ansible.builtin.stat:
+            path: /etc/apache2/sites-enabled/001-test-desable-virtualhost.conf
+          register: result
+        - name: Assert file
+          ansible.builtin.assert:
+            that:
+              - not result.stat.exists
     ## サービスのテスト
-    - name: Populate service facts
+    - name: Gather service facts
       ansible.builtin.service_facts:
     - name: Assert service
       ansible.builtin.assert:
