@@ -1,4 +1,6 @@
 ---
+apache_append_goaccess_repository: true
+
 # common_users:
 #   - name: vagrant
 #     groups:
