@@ -50,6 +50,8 @@ goaccessリポジトリを追加するか否か
 
 #### `apache_goaccess_apt_key_url`
 
+#### `apache_goaccess_apt_key_download_dest`
+
 #### `apache_goaccess_apt_key_dest`
 
 #### `apache_module_available_dir`
