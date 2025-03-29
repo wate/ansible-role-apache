@@ -114,10 +114,14 @@
 
   {% if vhost_setting.ssl.certificate_file is defined -%}
   SSLEngine on
+
   # Server Certificate:
   SSLCertificateFile {{ vhost_setting.ssl.certificate_file }}
   # Server Private Key:
   SSLCertificateKeyFile {{ vhost_setting.ssl.certificate_key_file }}
+
+  Protocols h2 http/1.1
+
   {% if vhost_setting.ssl.certificate_chain_file is defined -%}
   # Server Certificate Chain:
   SSLCertificateChainFile {{ vhost_setting.ssl.certificate_chain_file }}
