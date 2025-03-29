@@ -34,9 +34,13 @@ goaccessリポジトリを追加するか否か
 
 バーチャルホストの設定
 
-#### `apache_secrity_cfg`
+#### `apache_ssl_default_protocol`
 
-全体のセキュリティ設定
+SSL利用時のデフォルト値(SSLProtocol)
+
+#### `apache_ssl_default_cipher_suite`
+
+SSL利用時のデフォルト値(SSLCipherSuite)
 
 #### `apache_extra_cfg`
 

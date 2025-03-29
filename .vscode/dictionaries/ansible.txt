@@ -1,0 +1,7 @@
+blockinfile
+cronvar
+fileglob
+lineinfile
+selectattr
+subelements
+wantlist
