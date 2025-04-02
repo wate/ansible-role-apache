@@ -1,10 +1,15 @@
 ---
-- name: Allow http and https port
-  community.general.ufw:
-    rule: allow
-    name: WWW Full
 - name: Service apache is active and enabled on system startup
   ansible.builtin.systemd_service:
     name: apache2
     state: started
     enabled: true
+- name: Ensure ufw is active and enabled on system startup
+  ansible.builtin.systemd_service:
+    name: ufw
+    state: started
+    enabled: true
+- name: Allow http and https port
+  community.general.ufw:
+    rule: allow
+    name: WWW Full
