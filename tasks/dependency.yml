@@ -2,3 +2,7 @@
 - name: Install ufw
   ansible.builtin.apt:
     name: ufw
+- name: Allow http and https port
+  community.general.ufw:
+    rule: allow
+    name: WWW Full
