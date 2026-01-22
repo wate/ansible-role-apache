@@ -16,6 +16,8 @@
           ansible.builtin.assert:
             that:
               - goaccess_repo_result.stat.exists
+            fail_msg: "GoAccess repository source file not found"
+            success_msg: "GoAccess repository source file exists"
     ## パッケージのテスト
     - name: Gather the package facts
       ansible.builtin.package_facts:
@@ -25,6 +27,8 @@
         that:
           - ansible_facts.packages['apache2'] is defined
           - ansible_facts.packages['goaccess'] is defined
+        fail_msg: "Some required packages are not installed"
+        success_msg: "All required packages are installed"
     ## ユーザーのテスト
     - name: Check user
       ansible.builtin.user:
@@ -36,6 +40,8 @@
       ansible.builtin.assert:
         that:
           - result is not changed
+        fail_msg: "www-data user is not properly configured"
+        success_msg: "www-data user is properly configured"
     ## グループのテスト
     - name: Check group
       ansible.builtin.group:
@@ -47,6 +53,8 @@
       ansible.builtin.assert:
         that:
           - result is not changed
+        fail_msg: "www-data group is not properly configured"
+        success_msg: "www-data group is properly configured"
     # ファイルのテスト
     - name: Test virtualhost enable
       block:
@@ -58,6 +66,8 @@
           ansible.builtin.assert:
             that:
               - result.stat.exists
+            fail_msg: "Apache virtual host file not found"
+            success_msg: "Apache virtual host file exists"
         - name: Check virtualhost enabled
           ansible.builtin.stat:
             path: /etc/apache2/sites-enabled/000-default.conf
@@ -68,6 +78,8 @@
               - result.stat.exists
               - result.stat.islnk
               - result.stat.lnk_source == '/etc/apache2/sites-available/000-default.conf'
+            fail_msg: "Apache virtual host symlink is not properly configured"
+            success_msg: "Apache virtual host symlink is properly configured"
     - name: Test virtualhost disable
       block:
         - name: Check virtualhost setting
@@ -78,6 +90,8 @@
           ansible.builtin.assert:
             that:
               - result.stat.exists
+            fail_msg: "Apache disabled virtual host file not found"
+            success_msg: "Apache disabled virtual host file exists"
         - name: Check virtualhost disabled
           ansible.builtin.stat:
             path: /etc/apache2/sites-enabled/001-test-desable-virtualhost.conf
@@ -86,6 +100,8 @@
           ansible.builtin.assert:
             that:
               - not result.stat.exists
+            fail_msg: "Apache virtual host should not be enabled"
+            success_msg: "Apache virtual host is properly disabled"
     ## サービスのテスト
     - name: Gather service facts
       ansible.builtin.service_facts:
@@ -95,6 +111,8 @@
           - ansible_facts.services['apache2.service'] is defined
           - ansible_facts.services['apache2.service']['state'] == 'running'
           - ansible_facts.services['apache2.service']['status'] == 'enabled'
+        fail_msg: "Apache2 service is not running or not enabled"
+        success_msg: "Apache2 service is running and enabled"
     ## 待受ポートのテスト
     - name: Gather facts on listening ports
       community.general.listen_ports_facts:
@@ -107,3 +125,5 @@
       ansible.builtin.assert:
         that:
           - 80 in listen_tcp_posts
+        fail_msg: "Apache2 is not listening on port 80"
+        success_msg: "Apache2 is listening on port 80"
