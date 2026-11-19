@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: apache
+  namespace: wate
   author: yoshiaki tanaka
   description: setup Apache web server
   license: Apache
